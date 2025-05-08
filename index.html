@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poetry Night</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            overflow-x: hidden;
+            color: white;
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #000428, #004e92);
+        }
+        
+        /* Starry Background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* Moon - Enhanced Design */
+        .moon {
+            position: fixed;
+            top: 10%;
+            right: 10%;
+            width: 100px;
+            height: 100px;
+            background: #f5f3ce;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px #f5f3ce,
+                0 0 60px #f5f3ce,
+                inset -15px -15px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .moon:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 0 40px #f5f3ce,
+                0 0 80px #f5f3ce,
+                inset -20px -20px 15px rgba(0,0,0,0.3);
+        }
+        
+        .moon::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            box-shadow: 
+                30px 10px 0 0 rgba(0,0,0,0.2),
+                10px 30px 0 0 rgba(0,0,0,0.2),
+                40px 40px 0 0 rgba(0,0,0,0.2);
+        }
+        
+        /* Big Stars - New Design */
+        .big-star {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            filter: blur(1px);
+            z-index: -1;
+            animation: pulse 4s infinite alternate;
+            left: 5%;
+        }
+        
+        .big-star:nth-child(1) {
+            top: 15%;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .big-star:nth-child(2) {
+            top: 30%;
+            width: 180px;
+            height: 180px;
+        }
+        
+        .big-star:nth-child(3) {
+            top: 45%;
+            width: 220px;
+            height: 220px;
+        }
+        
+        /* Shooting Stars - New Design */
+        .shooting-star {
+            position: fixed;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0));
+            transform: rotate(-45deg);
+            transform-origin: left;
+            filter: blur(1px);
+            z-index: -1;
+            opacity: 0;
+        }
+        
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            filter: blur(1px);
+        }
+        
+        /* Galaxy Star - Changed to White */
+        .galaxy-star {
+            position: fixed;
+            top: 20%;
+            left: 10%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: pulse 4s infinite alternate, move 15s infinite linear;
+            z-index: -1;
+            opacity: 0.8;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.3); opacity: 1; }
+        }
+        
+        @keyframes move {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(50px, 30px); }
+            50% { transform: translate(0, 60px); }
+            75% { transform: translate(-50px, 30px); }
+            100% { transform: translate(0, 0); }
+        }
+        
+        /* Password Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #f5f3ce;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .modal button {
+            background-color: #f5f3ce;
+            color: #1e3c72;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        
+        .modal button:hover {
+            background-color: #fff;
+            transform: scale(1.05);
+        }
+        
+        /* Home Page */
+        .home-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        
+        .home-page h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            color: #f5f3ce;
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(245, 243, 206, 0.5); }
+            to { text-shadow: 0 0 20px rgba(245, 243, 206, 0.8), 0 0 30px rgba(245, 243, 206, 0.6); }
+        }
+        
+        .home-page p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .nav-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #f5f3ce;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(245, 243, 206, 0.7);
+            transition: all 0.3s;
+            z-index: 20;
+        }
+        
+        .nav-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(245, 243, 206, 0.9);
+        }
+        
+        .nav-button i {
+            font-size: 24px;
+            color: #1e3c72;
+        }
+        
+        /* Second Page */
+        .second-page {
+            display: none;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .title-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .planet {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #9c27b0, #e91e63);
+            border-radius: 50%;
+            margin-right: 15px;
+            box-shadow: 0 0 20px rgba(156, 39, 176, 0.8);
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .title {
+            font-size: 2rem;
+            color: #f5f3ce;
+            text-shadow: 0 0 10px rgba(245, 243, 206, 0.5);
+        }
+        
+        .profile {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #f5f3ce;
+        }
+        
+        .profile:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(245, 243, 206, 0.7);
+        }
+        
+        .profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Poem Display */
+        .poem-container {
+            background: rgba(30, 60, 114, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 0 auto 30px;
+            max-width: 600px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poem-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .poem-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            white-space: pre-line;
+        }
+        
+        .poem-author {
+            font-style: italic;
+            color: #f5f3ce;
+        }
+        
+        .poem-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+        }
+        
+        /* Poem List */
+        .poem-list-container {
+            background: rgba(30, 60, 114, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 600px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .category-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+        
+        .category-tab.active {
+            border-bottom: 2px solid #f5f3ce;
+            color: #f5f3ce;
+        }
+        
+        .category-tab:hover {
+            color: #f5f3ce;
+        }
+        
+        .poem-list {
+            display: none;
+        }
+        
+        .poem-list.active {
+            display: block;
+        }
+        
+        .poem-list h3 {
+            margin-bottom: 15px;
+            color: #f5f3ce;
+            text-align: center;
+        }
+        
+        .poem-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .poem-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .poem-item-category {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .poem-item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .poem-item-preview {
+            font-size: 0.9rem;
+            color: #ccc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .poem-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+        }
+        
+        .poem-actions button {
+            background: none;
+            border: none;
+            color: #f5f3ce;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .poem-actions button:hover {
+            text-decoration: underline;
+        }
+        
+        /* Locked Category - Enhanced */
+        .locked-category {
+            position: relative;
+        }
+        
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .locked-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        .locked-overlay p {
+            font-size: 1.2rem;
+            color: #f5f3ce;
+        }
+        
+        /* Edit Popup */
+        .edit-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .edit-popup-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        
+        .edit-popup h3 {
+            margin-bottom: 20px;
+            color: #f5f3ce;
+            text-align: center;
+        }
+        
+        .edit-popup label {
+            display: block;
+            margin-bottom: 5px;
+            color: #f5f3ce;
+        }
+        
+        .edit-popup input,
+        .edit-popup textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .edit-popup textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .edit-popup-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .edit-popup button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .edit-popup button.save {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .edit-popup button.cancel {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .edit-popup button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Delete Confirmation Popup */
+        .delete-confirm {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .delete-confirm-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 30px;
+            border-radius: 15px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+        
+        .delete-confirm h3 {
+            margin-bottom: 20px;
+            color: #f5f3ce;
+        }
+        
+        .delete-confirm p {
+            margin-bottom: 25px;
+            color: #f5f3ce;
+        }
+        
+        .delete-confirm-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .delete-confirm button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .delete-confirm button.confirm {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .delete-confirm button.cancel {
+            background-color: #607d8b;
+            color: white;
+        }
+        
+        .delete-confirm button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .home-page h1 {
+                font-size: 2.5rem;
+            }
+            
+            .poem-container, .poem-list-container {
+                width: 90%;
+            }
+            
+            .category-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .category-tab {
+                padding: 8px 12px;
+                font-size: 1rem;
+            }
+            
+            .moon {
+                width: 70px;
+                height: 70px;
+                top: 5%;
+                right: 5%;
+            }
+            
+            .galaxy-star {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .big-star {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Starry Background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Big Stars -->
+    <div class="big-star"></div>
+    <div class="big-star"></div>
+    <div class="big-star"></div>
+    
+    <!-- Moon - Enhanced -->
+    <div class="moon" id="moon"></div>
+    
+    <!-- Shooting Stars -->
+    <div class="shooting-star" id="shootingStar1"></div>
+    <div class="shooting-star" id="shootingStar2"></div>
+    
+    <!-- Galaxy Star - Changed to White -->
+    <div class="galaxy-star"></div>
+    
+    <!-- Password Modal -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h2>Enter Password</h2>
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button id="submitPassword">Submit</button>
+            <button id="closePasswordModal">Close</button>
+            <p id="errorMessage" style="color: #ff6b6b; margin-top: 10px; display: none;">Incorrect password</p>
+        </div>
+    </div>
+    
+    <!-- Home Page -->
+    <div class="home-page" id="homePage">
+        <h1>Poetry Night</h1>
+        <p>Discover beautiful poems that touch your soul and inspire your heart</p>
+    </div>
+    
+    <!-- Second Page -->
+    <div class="second-page" id="secondPage">
+        <div class="header">
+            <div class="title-container">
+                <div class="planet" id="planet"></div>
+                <h1 class="title">Poetry Night</h1>
+            </div>
+            <div class="profile" id="profile">
+                <img src="FOX.png" alt="Profile">
+            </div>
+        </div>
+        
+        <div class="poem-container" id="poemContainer">
+            <div class="poem-text" id="currentPoem"></div>
+            <div class="poem-author" id="poemAuthor"></div>
+            <div class="poem-category" id="poemCategory"></div>
+        </div>
+        
+        <div class="poem-list-container">
+            <div class="category-tabs">
+                <div class="category-tab active" data-category="heart">❤️</div>
+                <div class="category-tab" data-category="fire">🔥</div>
+                <div class="category-tab" data-category="devil">👿</div>
+            </div>
+            
+            <div class="poem-list active" id="heart-poems">
+                <h3>Love Poems ❤️</h3>
+                <div id="heartPoemsList"></div>
+            </div>
+            
+            <div class="poem-list" id="fire-poems">
+                <h3>Passionate Poems 🔥</h3>
+                <div id="firePoemsList"></div>
+            </div>
+            
+            <div class="poem-list" id="devil-poems">
+                <h3>Dark Poems 👿</h3>
+                <div id="devilPoemsList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation Button -->
+    <div class="nav-button" id="navButton">
+        <i class="fas fa-home"></i>
+    </div>
+    
+    <!-- Edit Popup -->
+    <div class="edit-popup" id="editPopup">
+        <div class="edit-popup-content">
+            <button class="edit-popup-close" id="closeEditPopup">&times;</button>
+            <h3>Add New Poem</h3>
+            <label for="editAuthor">Author:</label>
+            <input type="text" id="editAuthor" placeholder="Enter author name">
+            <label for="editPoem">Poem:</label>
+            <textarea id="editPoem" placeholder="Write your poem here"></textarea>
+            <div class="edit-popup-buttons">
+                <button class="save" id="saveEdit">Save</button>
+                <button class="cancel" id="cancelEdit">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Popup -->
+    <div class="delete-confirm" id="deleteConfirm">
+        <div class="delete-confirm-content">
+            <h3>Delete Poem</h3>
+            <p>Are you sure you want to delete this poem?</p>
+            <div class="delete-confirm-buttons">
+                <button class="confirm" id="confirmDelete">Delete</button>
+                <button class="cancel" id="cancelDelete">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample poems data
+        const poems = [
+            { 
+                text: "The woods are lovely, dark and deep,\nBut I have promises to keep,\nAnd miles to go before I sleep,\nAnd miles to go before I sleep.", 
+                author: "Robert Frost", 
+                category: "❤️" 
+            },
+            { 
+                text: "Do not go gentle into that good night,\nOld age should burn and rave at close of day;\nRage, rage against the dying of the light.", 
+                author: "Dylan Thomas", 
+                category: "🔥" 
+            },
+            { 
+                text: "I wandered lonely as a cloud\nThat floats on high o'er vales and hills,\nWhen all at once I saw a crowd,\nA host, of golden daffodils;", 
+                author: "William Wordsworth", 
+                category: "❤️" 
+            },
+            { 
+                text: "Two roads diverged in a wood, and I—\nI took the one less traveled by,\nAnd that has made all the difference.", 
+                author: "Robert Frost", 
+                category: "👿" 
+            },
+            { 
+                text: "Hope is the thing with feathers\nThat perches in the soul,\nAnd sings the tune without the words,\nAnd never stops at all,", 
+                author: "Emily Dickinson", 
+                category: "❤️" 
+            },
+            { 
+                text: "I sing the body electric,\nThe armies of those I love engirth me and I engirth them,\nThey will not let me off till I go with them, respond to them,\nAnd discorrupt them, and charge them full with the charge of the soul.", 
+                author: "Walt Whitman", 
+                category: "🔥" 
+            }
+        ];
+        
+        // DOM Elements
+        const starsContainer = document.getElementById('stars');
+        const moon = document.getElementById('moon');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const submitPassword = document.getElementById('submitPassword');
+        const closePasswordModal = document.getElementById('closePasswordModal');
+        const errorMessage = document.getElementById('errorMessage');
+        const homePage = document.getElementById('homePage');
+        const secondPage = document.getElementById('secondPage');
+        const navButton = document.getElementById('navButton');
+        const currentPoem = document.getElementById('currentPoem');
+        const poemAuthor = document.getElementById('poemAuthor');
+        const poemCategory = document.getElementById('poemCategory');
+        const heartPoemsList = document.getElementById('heartPoemsList');
+        const firePoemsList = document.getElementById('firePoemsList');
+        const devilPoemsList = document.getElementById('devilPoemsList');
+        const profile = document.getElementById('profile');
+        const editPopup = document.getElementById('editPopup');
+        const closeEditPopup = document.getElementById('closeEditPopup');
+        const editAuthor = document.getElementById('editAuthor');
+        const editPoem = document.getElementById('editPoem');
+        const saveEdit = document.getElementById('saveEdit');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const deleteConfirm = document.getElementById('deleteConfirm');
+        const confirmDelete = document.getElementById('confirmDelete');
+        const cancelDelete = document.getElementById('cancelDelete');
+        const planet = document.getElementById('planet');
+        const shootingStar1 = document.getElementById('shootingStar1');
+        const shootingStar2 = document.getElementById('shootingStar2');
+        
+        // Variables
+        let moonClicks = 0;
+        let currentPoemIndex = 0;
+        let poemInterval;
+        let selectedCategory = "❤️";
+        let currentEditingIndex = -1;
+        let currentDeletingIndex = -1;
+        
+        // Initialize the page
+        function init() {
+            createStars();
+            animateShootingStars();
+            displayRandomPoem();
+            renderPoemsLists();
+            startPoemRotation();
+            
+            // Check if password is already entered (for demo purposes)
+            const passwordEntered = sessionStorage.getItem('passwordEntered');
+            if (passwordEntered === 'true') {
+                homePage.style.display = 'none';
+                secondPage.style.display = 'block';
+            }
+        }
+        
+        // Create starry background
+        function createStars() {
+            const starsCount = 200;
+            
+            for (let i = 0; i < starsCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random size between 1 and 3 pixels
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // Random position
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // Random animation duration
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Animate shooting stars
+        function animateShootingStars() {
+            animateShootingStar(shootingStar1, 10000);
+            setTimeout(() => {
+                animateShootingStar(shootingStar2, 12000);
+            }, 3000);
+        }
+        
+        function animateShootingStar(star, delay) {
+            star.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Random starting position
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight / 2;
+                
+                // Random length
+                const length = Math.random() * 200 + 100;
+                star.style.width = `${length}px`;
+                
+                // Set initial position
+                star.style.left = `${startX}px`;
+                star.style.top = `${startY}px`;
+                star.style.opacity = '1';
+                
+                // Animation
+                const duration = 1000;
+                const startTime = performance.now();
+                
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const currentX = startX + (window.innerWidth * 0.5) * progress;
+                    const currentY = startY + (window.innerHeight * 0.5) * progress;
+                    
+                    star.style.left = `${currentX}px`;
+                    star.style.top = `${currentY}px`;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Reset star after animation completes
+                        star.style.opacity = '0';
+                        setTimeout(() => animateShootingStar(star, delay), delay);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }, Math.random() * 5000);
+        }
+        
+        // Display a random poem
+        function displayRandomPoem() {
+            currentPoemIndex = Math.floor(Math.random() * poems.length);
+            const poem = poems[currentPoemIndex];
+            
+            currentPoem.textContent = poem.text;
+            poemAuthor.textContent = `— ${poem.author}`;
+            poemCategory.textContent = poem.category;
+        }
+        
+        // Rotate poems every 30 seconds
+        function startPoemRotation() {
+            poemInterval = setInterval(displayRandomPoem, 30000);
+        }
+        
+        // Render poems lists for all categories
+        function renderPoemsLists() {
+            heartPoemsList.innerHTML = '';
+            firePoemsList.innerHTML = '';
+            devilPoemsList.innerHTML = '';
+            
+            poems.forEach((poem, index) => {
+                const poemItem = createPoemItem(poem, index);
+                
+                if (poem.category === "❤️") {
+                    heartPoemsList.appendChild(poemItem);
+                } else if (poem.category === "🔥") {
+                    firePoemsList.appendChild(poemItem.cloneNode(true));
+                } else if (poem.category === "👿") {
+                    devilPoemsList.appendChild(poemItem.cloneNode(true));
+                }
+            });
+            
+            // Add event listeners to poem items
+            addPoemItemEventListeners(heartPoemsList);
+            addPoemItemEventListeners(firePoemsList);
+            addPoemItemEventListeners(devilPoemsList);
+        }
+        
+        // Create a poem item element
+        function createPoemItem(poem, index) {
+            const poemItem = document.createElement('div');
+            poemItem.classList.add('poem-item');
+            
+            // Get first line for preview
+            const firstLine = poem.text.split('\n')[0];
+            
+            poemItem.innerHTML = `
+                <div class="poem-item-category">${poem.category}</div>
+                <div class="poem-item-title">${poem.author}</div>
+                <div class="poem-item-preview">${firstLine}</div>
+                <div class="poem-actions">
+                    <button class="edit-poem" data-index="${index}">Edit</button>
+                    <button class="delete-poem" data-index="${index}">Delete</button>
+                </div>
+            `;
+            
+            return poemItem;
+        }
+        
+        // Add event listeners to poem items in a container
+        function addPoemItemEventListeners(container) {
+            container.querySelectorAll('.poem-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('edit-poem') && !e.target.classList.contains('delete-poem')) {
+                        const index = this.querySelector('.edit-poem').dataset.index;
+                        openPoemPopup(index);
+                    }
+                });
+            });
+            
+            // Add event listeners to edit buttons
+            container.querySelectorAll('.edit-poem').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const index = parseInt(this.dataset.index);
+                    openEditPopup(index);
+                });
+            });
+            
+            // Add event listeners to delete buttons
+            container.querySelectorAll('.delete-poem').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const index = parseInt(this.dataset.index);
+                    openDeleteConfirm(index);
+                });
+            });
+        }
+        
+        // Open edit popup
+        function openEditPopup(index) {
+            const poem = poems[index];
+            currentEditingIndex = index;
+            
+            editAuthor.value = poem.author;
+            editPoem.value = poem.text;
+            editPopup.style.display = 'flex';
+        }
+        
+        // Open delete confirmation popup
+        function openDeleteConfirm(index) {
+            currentDeletingIndex = index;
+            deleteConfirm.style.display = 'flex';
+        }
+        
+        // Save edited poem
+        function saveEditedPoem() {
+            if (currentEditingIndex >= 0) {
+                poems[currentEditingIndex].author = editAuthor.value;
+                poems[currentEditingIndex].text = editPoem.value;
+                renderPoemsLists();
+                editPopup.style.display = 'none';
+                currentEditingIndex = -1;
+            }
+        }
+        
+        // Delete poem
+        function deletePoem() {
+            if (currentDeletingIndex >= 0) {
+                poems.splice(currentDeletingIndex, 1);
+                renderPoemsLists();
+                deleteConfirm.style.display = 'none';
+                currentDeletingIndex = -1;
+            }
+        }
+        
+        // Switch between poem categories
+        function switchCategory(category) {
+            // Hide all poem lists
+            document.querySelectorAll('.poem-list').forEach(list => {
+                list.classList.remove('active');
+            });
+            
+            // Show selected poem list
+            document.getElementById(`${category}-poems`).classList.add('active');
+            
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelector(`.category-tab[data-category="${category}"]`).classList.add('active');
+        }
+        
+        // Event Listeners
+        moon.addEventListener('click', function() {
+            moonClicks++;
+            
+            if (moonClicks >= 3) {
+                passwordInput.value = '';
+                passwordModal.style.display = 'flex';
+                moonClicks = 0;
+            }
+        });
+        
+        submitPassword.addEventListener('click', function() {
+            if (passwordInput.value === '9100') {
+                passwordModal.style.display = 'none';
+                homePage.style.display = 'none';
+                secondPage.style.display = 'block';
+                sessionStorage.setItem('passwordEntered', 'true');
+            } else {
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
+        
+        closePasswordModal.addEventListener('click', function() {
+            passwordModal.style.display = 'none';
+        });
+        
+        navButton.addEventListener('click', function() {
+            window.location.href = 'https://alichalaki.github.io/';
+        });
+        
+        profile.addEventListener('click', function() {
+            // Open edit popup for new poem
+            currentEditingIndex = -1;
+            editAuthor.value = '';
+            editPoem.value = '';
+            editPopup.style.display = 'flex';
+        });
+        
+        closeEditPopup.addEventListener('click', function() {
+            editPopup.style.display = 'none';
+            currentEditingIndex = -1;
+        });
+        
+        cancelEdit.addEventListener('click', function() {
+            editPopup.style.display = 'none';
+            currentEditingIndex = -1;
+        });
+        
+        saveEdit.addEventListener('click', function() {
+            if (currentEditingIndex === -1) {
+                // Add new poem
+                const newPoem = {
+                    text: editPoem.value,
+                    author: editAuthor.value,
+                    category: selectedCategory
+                };
+                poems.push(newPoem);
+                renderPoemsLists();
+            } else {
+                saveEditedPoem();
+            }
+            editPopup.style.display = 'none';
+            currentEditingIndex = -1;
+        });
+        
+        confirmDelete.addEventListener('click', deletePoem);
+        
+        cancelDelete.addEventListener('click', function() {
+            deleteConfirm.style.display = 'none';
+            currentDeletingIndex = -1;
+        });
+        
+        // Tab switching in poem categories
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const category = this.dataset.category;
+                selectedCategory = category;
+                switchCategory(category);
+            });
+        });
+        
+        // Purple planet click to lock the page
+        planet.addEventListener('click', function() {
+            homePage.style.display = 'flex';
+            secondPage.style.display = 'none';
+        });
+        
+        // Initialize the page
+        init();
+    </script>
+</body>
+</html>
