@@ -300,7 +300,7 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         /* Moving Stars */
@@ -434,6 +434,12 @@
             display: flex;
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .tab-buttons::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         .tab-btn {
@@ -445,6 +451,7 @@
             font-size: 16px;
             transition: all 0.3s ease;
             position: relative;
+            white-space: nowrap;
         }
 
         .tab-btn.active {
@@ -499,6 +506,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .category-btn {
@@ -512,6 +520,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            margin-bottom: 10px;
         }
 
         .category-btn.active {
@@ -593,6 +602,7 @@
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .category-column {
@@ -603,6 +613,7 @@
             min-height: 200px;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 15px;
         }
 
         .category-column.locked {
@@ -643,6 +654,23 @@
 
         .poem-list {
             list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        }
+
+        .poem-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .poem-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .poem-list::-webkit-scrollbar-thumb {
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 10px;
         }
 
         .poem-item {
@@ -721,6 +749,8 @@
         .poem-popup-buttons {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .poem-popup-btn {
@@ -730,6 +760,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
+            flex: 1;
+            min-width: 120px;
         }
 
         .edit-poem-btn {
@@ -813,17 +845,23 @@
         .edit-poem-buttons {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .save-poem-btn {
             background: linear-gradient(45deg, #6a11cb, #2575fc);
             color: white;
+            flex: 1;
+            min-width: 120px;
         }
 
         .cancel-edit-btn {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            flex: 1;
+            min-width: 120px;
         }
 
         /* Delete Confirmation */
@@ -862,6 +900,7 @@
             display: flex;
             justify-content: center;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .delete-confirmation-btn {
@@ -871,6 +910,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
+            flex: 1;
+            min-width: 120px;
         }
 
         .confirm-delete-btn {
@@ -900,6 +941,57 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             z-index: 2;
+        }
+
+        /* Backup Tab Styles */
+        .backup-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .backup-btn {
+            padding: 12px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .backup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .backup-btn.import-btn {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .backup-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
 
         /* Responsive Styles */
@@ -933,13 +1025,8 @@
                 right: 30px;
             }
 
-            .category-display {
-                flex-direction: column;
-            }
-
             .category-column {
                 width: 100%;
-                margin-bottom: 15px;
             }
 
             .poems-container {
@@ -959,22 +1046,21 @@
             }
 
             .tab-buttons {
-                flex-direction: column;
+                flex-direction: row;
+                overflow-x: auto;
             }
 
             .tab-btn {
-                width: 100%;
-                text-align: center;
-                margin-bottom: 5px;
+                white-space: nowrap;
             }
 
-            .poem-popup-buttons, .edit-poem-buttons {
-                flex-direction: column;
-                gap: 10px;
+            .category-btn {
+                width: 48%;
+                font-size: 18px;
             }
 
-            .poem-popup-buttons button, .edit-poem-buttons button {
-                width: 100%;
+            .poem-popup-btn, .delete-confirmation-btn {
+                min-width: 100%;
             }
         }
 
@@ -995,22 +1081,15 @@
                 padding: 15px;
             }
 
-            .tab-buttons {
-                flex-direction: column;
-            }
-
-            .tab-btn {
+            .category-btn {
                 width: 100%;
-                text-align: center;
-                margin-bottom: 5px;
             }
 
-            .poem-popup-buttons, .edit-poem-buttons {
+            .poem-popup-buttons, .edit-poem-buttons, .delete-confirmation-buttons {
                 flex-direction: column;
-                gap: 10px;
             }
 
-            .poem-popup-buttons button, .edit-poem-buttons button {
+            .poem-popup-btn, .edit-poem-buttons button, .delete-confirmation-btn {
                 width: 100%;
             }
         }
@@ -1084,6 +1163,7 @@
         <h2>Profile</h2>
         <div class="tab-buttons">
             <button class="tab-btn active" data-tab="addPoem">Add Poem</button>
+            <button class="tab-btn" data-tab="backup">Backup</button>
         </div>
         
         <div class="tab-content active" id="addPoem">
@@ -1097,6 +1177,21 @@
                 </div>
                 <button type="submit" class="add-poem-btn">Add Poem</button>
             </form>
+        </div>
+        
+        <div class="tab-content" id="backup">
+            <div class="backup-options">
+                <button class="backup-btn" id="exportTxtBtn">Export as TXT</button>
+                <button class="backup-btn" id="exportJsonBtn">Export as JSON</button>
+                <button class="backup-btn import-btn" id="importBtn">Import Poems</button>
+                <input type="file" id="fileInput" class="file-input" accept=".txt,.json">
+            </div>
+            <div class="backup-info">
+                <p><strong>Backup Instructions:</strong></p>
+                <p>1. Export your poems regularly to prevent data loss.</p>
+                <p>2. You can import previously exported files to restore your poems.</p>
+                <p>3. JSON format preserves all poem metadata (title, author, category).</p>
+            </div>
         </div>
     </div>
 
@@ -1182,6 +1277,10 @@
         const deleteConfirmation = document.getElementById('deleteConfirmation');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const exportTxtBtn = document.getElementById('exportTxtBtn');
+        const exportJsonBtn = document.getElementById('exportJsonBtn');
+        const importBtn = document.getElementById('importBtn');
+        const fileInput = document.getElementById('fileInput');
 
         // App State
         let moonClicks = 0;
@@ -1259,6 +1358,16 @@
             });
             profilePic.addEventListener('click', () => {
                 profilePopup.classList.add('active');
+            });
+            
+            // Tab buttons
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab).classList.add('active');
+                });
             });
             
             // Category buttons
@@ -1352,6 +1461,12 @@
             cancelDeleteBtn.addEventListener('click', () => {
                 deleteConfirmation.classList.remove('active');
             });
+            
+            // Backup buttons
+            exportTxtBtn.addEventListener('click', exportPoemsAsTxt);
+            exportJsonBtn.addEventListener('click', exportPoemsAsJson);
+            importBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', importPoems);
         }
 
         // Create stars for background
@@ -1497,6 +1612,28 @@
             
             // Close popup
             profilePopup.classList.remove('active');
+            
+            // Show success animation
+            const successElement = document.createElement('div');
+            successElement.textContent = 'Poem Added!';
+            successElement.style.position = 'fixed';
+            successElement.style.bottom = '20px';
+            successElement.style.left = '50%';
+            successElement.style.transform = 'translateX(-50%)';
+            successElement.style.backgroundColor = 'rgba(106, 17, 203, 0.9)';
+            successElement.style.color = 'white';
+            successElement.style.padding = '10px 20px';
+            successElement.style.borderRadius = '20px';
+            successElement.style.zIndex = '1000';
+            successElement.style.animation = 'fadeIn 0.5s ease forwards';
+            document.body.appendChild(successElement);
+            
+            setTimeout(() => {
+                successElement.style.animation = 'fadeIn 0.5s ease reverse forwards';
+                setTimeout(() => {
+                    document.body.removeChild(successElement);
+                }, 500);
+            }, 2000);
         }
 
         // Save edited poem
@@ -1596,6 +1733,131 @@
             poems = poems.filter(poem => poem.id !== id);
             localStorage.setItem('poems', JSON.stringify(poems));
             updatePoemDisplay();
+        }
+
+        // Export poems as TXT
+        function exportPoemsAsTxt() {
+            let txtContent = "Poetry Night - Poem Collection\n\n";
+            
+            poems.forEach(poem => {
+                txtContent += `Title: ${poem.title}\n`;
+                txtContent += `Author: ${poem.author}\n`;
+                txtContent += `Category: ${poem.category}\n\n`;
+                txtContent += `${poem.content}\n\n`;
+                txtContent += "--------------------------------\n\n";
+            });
+            
+            const blob = new Blob([txtContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'poetry-night-poems.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            profilePopup.classList.remove('active');
+        }
+
+        // Export poems as JSON
+        function exportPoemsAsJson() {
+            const jsonContent = JSON.stringify(poems, null, 2);
+            const blob = new Blob([jsonContent], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'poetry-night-poems.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            profilePopup.classList.remove('active');
+        }
+
+        // Import poems
+        function importPoems(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let importedPoems = [];
+                    const content = e.target.result;
+                    
+                    if (file.name.endsWith('.json')) {
+                        importedPoems = JSON.parse(content);
+                    } else if (file.name.endsWith('.txt')) {
+                        // Simple TXT parsing (this is basic and might need adjustment)
+                        const poemBlocks = content.split('--------------------------------');
+                        
+                        poemBlocks.forEach(block => {
+                            if (block.trim() === '') return;
+                            
+                            const lines = block.split('\n').filter(line => line.trim() !== '');
+                            if (lines.length < 4) return;
+                            
+                            const titleLine = lines.find(line => line.startsWith('Title: '));
+                            const authorLine = lines.find(line => line.startsWith('Author: '));
+                            const categoryLine = lines.find(line => line.startsWith('Category: '));
+                            
+                            if (!titleLine || !authorLine || !categoryLine) return;
+                            
+                            const title = titleLine.replace('Title: ', '').trim();
+                            const author = authorLine.replace('Author: ', '').trim();
+                            const category = categoryLine.replace('Category: ', '').trim();
+                            const content = lines.slice(3).join('\n').trim();
+                            
+                            importedPoems.push({
+                                id: generateId(),
+                                title: title,
+                                content: content,
+                                author: author,
+                                category: category
+                            });
+                        });
+                    }
+                    
+                    if (importedPoems.length > 0) {
+                        if (confirm(`Import ${importedPoems.length} poems? This will replace your current collection.`)) {
+                            poems = importedPoems;
+                            localStorage.setItem('poems', JSON.stringify(poems));
+                            updatePoemDisplay();
+                            profilePopup.classList.remove('active');
+                            
+                            // Show success message
+                            const successElement = document.createElement('div');
+                            successElement.textContent = `Successfully imported ${importedPoems.length} poems!`;
+                            successElement.style.position = 'fixed';
+                            successElement.style.bottom = '20px';
+                            successElement.style.left = '50%';
+                            successElement.style.transform = 'translateX(-50%)';
+                            successElement.style.backgroundColor = 'rgba(106, 17, 203, 0.9)';
+                            successElement.style.color = 'white';
+                            successElement.style.padding = '10px 20px';
+                            successElement.style.borderRadius = '20px';
+                            successElement.style.zIndex = '1000';
+                            successElement.style.animation = 'fadeIn 0.5s ease forwards';
+                            document.body.appendChild(successElement);
+                            
+                            setTimeout(() => {
+                                successElement.style.animation = 'fadeIn 0.5s ease reverse forwards';
+                                setTimeout(() => {
+                                    document.body.removeChild(successElement);
+                                }, 500);
+                            }, 3000);
+                        }
+                    } else {
+                        alert('No valid poems found in the file.');
+                    }
+                } catch (error) {
+                    alert('Error importing poems: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            fileInput.value = ''; // Reset file input
         }
 
         // Initialize the app
